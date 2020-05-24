@@ -1,7 +1,7 @@
 gameloop
 read opponentX:int opponentY:int
 read boardSize:int
-loop boardSize read line:String
+loop boardSize read line:string(boardSize)
 write 4	4
 
 STATEMENT
