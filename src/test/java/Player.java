@@ -24,36 +24,38 @@ public class Player {
 		}
 	}
 	
-	public static void main(String[] args) {
-		new Player();
-	}
-	
 	public Player() {
-		run();
+		
 	}
 	
 	public void run() {
 		Scanner in = new Scanner(System.in);
 		
+		System.err.println("Reading");
+		System.out.println("Reading");
+		
 		while (true) {
 			int opponentRow = in.nextInt();
 			int opponentCol = in.nextInt();
+			if (opponentRow == -1) {
+				opponentRow = 10;
+				opponentCol = 10;
+			}
+			
+			System.err.println(opponentRow + " " + opponentCol);
 			
 			boardSize = in.nextInt();
-			in.nextLine();
-			
+			System.err.println(boardSize);
 			String[] lines = new String[boardSize];
 			for (int i = 0; i < boardSize; i++) {
 				String line = in.nextLine();
+				System.err.println(line);
 				lines[i] = line;
 			}
 			
 			PlayerColor[][] board = getBoard(lines);
 			
-			List<Pos> possible = getPossibleActions(board, null, 0.2);
-			if (possible.isEmpty()) {
-				possible.add(new Pos((int) (Math.random() * boardSize), (int) (Math.random() * boardSize)));
-			}
+			List<Pos> possible = getPossibleActions(board, PlayerColor.BLACK);
 			Pos chosen = possible.get((int) (Math.random() * possible.size()));
 			
 			System.out.println(String.format("%d %d", chosen.row, chosen.col));
@@ -76,7 +78,7 @@ public class Player {
 		return board;
 	}
 	
-	protected List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor, double addRandom) {
+	protected List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor) {
 		List<Pos> blackStones = new ArrayList<>();
 		List<Pos> whiteStones = new ArrayList<>();
 		for (int i = 0; i < board.length; i++) {
@@ -94,25 +96,12 @@ public class Player {
 		if (myColor == PlayerColor.BLACK) {
 			opponentStones = whiteStones;
 		}
-		else if (myColor == PlayerColor.WHITE) {
+		if (myColor == PlayerColor.WHITE) {
 			opponentStones = blackStones;
 		}
-		else {
-			opponentStones = whiteStones;
-			opponentStones.addAll(blackStones);
-		}
 		
-		List<Pos> possibilities = opponentStones.stream().flatMap(pos -> getNear(pos).stream()).filter(pos -> board[pos.row][pos.col] == null)
+		return opponentStones.stream().flatMap(pos -> getNear(pos).stream()).filter(pos -> board[pos.row][pos.col] == null)
 				.collect(Collectors.toList());
-		int random = (int) (possibilities.size() * addRandom);
-		for (int i = 0; i < random; i++) {
-			Pos pos = new Pos((int) (Math.random() * boardSize), (int) (Math.random() * boardSize));
-			if (board[pos.row][pos.col] == null) {
-				possibilities.add(pos);
-			}
-		}
-		
-		return possibilities;
 	}
 	
 	protected List<Pos> getNear(Pos action) {

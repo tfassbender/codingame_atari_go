@@ -1,16 +1,17 @@
 gameloop
-read opponentRow:int opponentCol:int
-read validActionCount:int
-loop validActionCount read row:int col:int
-write 0 0
+read opponentX:int opponentY:int
+read boardSize:int
+loop boardSize read line:String
+write 4	4
 
 STATEMENT
-Get 3 cells in a row!
+Capture more stones than your opponent.
 
 INPUT
-opponentRow: The coordinates of your opponent's last move
-validActionCount: the number of possible actions for your next move
-row: The coordinates of a possible next move
+opponentX: The x coordinate of your opponent's last move
+opponentY: The y coordinate of your opponent's last move
+boardSize: the size of the board (width and height)
+line: A row of the current board where 'B' marks a black stone, 'W' marks a white stone and '.' marks an empty field
 
 OUTPUT
-<row> <column>
+<x> <y>
