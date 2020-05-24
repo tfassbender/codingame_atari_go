@@ -6,7 +6,7 @@ import com.codingame.gameengine.core.MultiplayerGameManager;
 
 public enum League {
 	
-	LEAGUE_1(1, 20, 9), //
+	LEAGUE_1(1, 80, 9), //
 	LEAGUE_2(2, 200, 19);
 	
 	private final int level;

@@ -132,7 +132,7 @@ public class Referee extends AbstractReferee {
 	private void drawPoints() {
 		final int x = 250;
 		final int y = 500;
-		final int capturedFontSize = 50;
+		final int capturedFontSize = 60;
 		final int textColor = 0x000000;
 		final int stoneSize = 100;
 		final int stoneX = -75;
@@ -174,7 +174,6 @@ public class Referee extends AbstractReferee {
 	
 	@Override
 	public void gameTurn(int turn) {
-		System.out.println(turn);
 		Player player = gameManager.getPlayer((turn - 1) % gameManager.getPlayerCount());
 		sendInputs(player);
 		player.execute();
