@@ -9,6 +9,7 @@
 
 	<properties>
 		<gamengine.version>3.13.1</gamengine.version>
+		<junit.version>5.5.0</junit.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
@@ -32,29 +33,40 @@
 			<version>${gamengine.version}</version>
 		</dependency>
 
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-toggle</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-toggle</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-endscreen</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-endscreen</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
 
-        <dependency>
-            <groupId>com.codingame.gameengine</groupId>
-            <artifactId>module-tooltip</artifactId>
-            <version>${gamengine.version}</version>
-        </dependency>
-		
+		<dependency>
+			<groupId>com.codingame.gameengine</groupId>
+			<artifactId>module-tooltip</artifactId>
+			<version>${gamengine.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
 			<version>2.10.0</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
