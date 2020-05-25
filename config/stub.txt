@@ -1,17 +1,21 @@
+read myColor:string(1)
 gameloop
 read opponentX:int opponentY:int
+read myScore:int opponentScore:int
 read boardSize:int
 loop boardSize read line:string(boardSize)
-write 4	4
+write PASS
 
 STATEMENT
 Capture more stones than your opponent.
 
 INPUT
-opponentX: The x coordinate of your opponent's last move
-opponentY: The y coordinate of your opponent's last move
+opponentX: The x coordinate of your opponent's last move (or -1 if the opponent passed)
+opponentY: The y coordinate of your opponent's last move (or -1 if the opponent passed)
+myScore: Your current score (the number of captured stones)
+opponentScore: the opponents current score (the number of captured stones)
 boardSize: the size of the board (width and height)
 line: A row of the current board where 'B' marks a black stone, 'W' marks a white stone and '.' marks an empty field
 
 OUTPUT
-<x> <y>
+x and y coordinates of the stone you want to place or PASS if you don't want to place a stone

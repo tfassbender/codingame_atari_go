@@ -3,7 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Player2 {
+public class AbstractPlayer {
 	
 	protected int boardSize;
 	
@@ -16,65 +16,49 @@ public class Player2 {
 	
 	protected static class Pos {
 		
-		int y, x;
+		int row, col;
 		
-		public Pos(int x, int y) {
-			this.x = x;
-			this.y = y;
+		public Pos(int row, int col) {
+			this.row = row;
+			this.col = col;
 		}
 	}
 	
-	public static void main(String[] args) {
-		new Player2();
-	}
-	
-	public Player2() {
-		run();
+	public AbstractPlayer() {
+		
 	}
 	
 	public void run() {
 		Scanner in = new Scanner(System.in);
 		
-		String color = in.nextLine();
-		
-		PlayerColor myColor;
-		if (color.equals("B")) {
-			myColor = PlayerColor.BLACK;
-		}
-		else if (color.equals("W")) {
-			myColor = PlayerColor.WHITE;
-		}
-		else {
-			throw new IllegalStateException("Unknown color: " + color);
-		}
-		
-		System.err.println("Color: " + color);
+		System.err.println("Reading");
+		System.out.println("Reading");
 		
 		while (true) {
-			int opponentX = in.nextInt();
-			int opponentY = in.nextInt();
+			int opponentRow = in.nextInt();
+			int opponentCol = in.nextInt();
+			if (opponentRow == -1) {
+				opponentRow = 10;
+				opponentCol = 10;
+			}
 			
-			int myScore = in.nextInt();
-			int opponentScore = in.nextInt();
+			System.err.println(opponentRow + " " + opponentCol);
 			
 			boardSize = in.nextInt();
-			in.nextLine();
-			
+			System.err.println(boardSize);
 			String[] lines = new String[boardSize];
 			for (int i = 0; i < boardSize; i++) {
 				String line = in.nextLine();
+				System.err.println(line);
 				lines[i] = line;
 			}
 			
 			PlayerColor[][] board = getBoard(lines);
 			
-			List<Pos> possible = getPossibleActions(board, myColor, 0.1);
-			if (possible.isEmpty()) {
-				possible.add(new Pos((int) (Math.random() * 9), (int) (Math.random() * 9)));
-			}
+			List<Pos> possible = getPossibleActions(board, PlayerColor.BLACK);
 			Pos chosen = possible.get((int) (Math.random() * possible.size()));
 			
-			System.out.println(String.format("%d %d", chosen.x, chosen.y));
+			System.out.println(String.format("%d %d", chosen.row, chosen.col));
 		}
 	}
 	
@@ -94,16 +78,16 @@ public class Player2 {
 		return board;
 	}
 	
-	protected List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor, double addRandom) {
+	protected List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor) {
 		List<Pos> blackStones = new ArrayList<>();
 		List<Pos> whiteStones = new ArrayList<>();
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
 				if (board[i][j] == PlayerColor.BLACK) {
-					blackStones.add(new Pos(j, i));
+					blackStones.add(new Pos(i, j));
 				}
 				if (board[i][j] == PlayerColor.WHITE) {
-					whiteStones.add(new Pos(j, i));
+					whiteStones.add(new Pos(i, j));
 				}
 			}
 		}
@@ -112,33 +96,20 @@ public class Player2 {
 		if (myColor == PlayerColor.BLACK) {
 			opponentStones = whiteStones;
 		}
-		else if (myColor == PlayerColor.WHITE) {
+		if (myColor == PlayerColor.WHITE) {
 			opponentStones = blackStones;
 		}
-		else {
-			opponentStones = whiteStones;
-			opponentStones.addAll(blackStones);
-		}
 		
-		List<Pos> possibilities = opponentStones.stream().flatMap(pos -> getNear(pos).stream()).filter(pos -> board[pos.y][pos.x] == null)
+		return opponentStones.stream().flatMap(pos -> getNear(pos).stream()).filter(pos -> board[pos.row][pos.col] == null)
 				.collect(Collectors.toList());
-		int random = (int) (possibilities.size() * addRandom);
-		for (int i = 0; i < random; i++) {
-			Pos pos = new Pos((int) (Math.random() * boardSize), (int) (Math.random() * boardSize));
-			if (board[pos.y][pos.x] == null) {
-				possibilities.add(pos);
-			}
-		}
-		
-		return possibilities;
 	}
 	
 	protected List<Pos> getNear(Pos action) {
 		List<Pos> fields = new ArrayList<Pos>();
 		int[][] nearFields = new int[][] {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 		for (int[] near : nearFields) {
-			Pos pos = new Pos(action.x + near[0], action.y + near[1]);
-			if (pos.y >= 0 && pos.y < boardSize && pos.x >= 0 && pos.x < boardSize) {
+			Pos pos = new Pos(action.row + near[0], action.col + near[1]);
+			if (pos.row >= 0 && pos.row < boardSize && pos.col >= 0 && pos.col < boardSize) {
 				fields.add(pos);
 			}
 		}

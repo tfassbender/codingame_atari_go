@@ -5,11 +5,18 @@ public class Action {
 	public final int row;
 	public final int col;
 	public Player player;
+	public boolean pass;
 	
 	public Action(Player player, int row, int col) {
 		this.player = player;
 		this.row = row;
 		this.col = col;
+	}
+	
+	public static Action pass(Player player) {
+		Action action = new Action(player, -1, -1);
+		action.pass = true;
+		return action;
 	}
 	
 	@Override

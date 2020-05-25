@@ -5,9 +5,9 @@ import java.util.stream.Collectors;
 
 public class Player1 {
 	
-	protected int boardSize;
+	public static int boardSize;
 	
-	protected PlayerColor playerColor;
+	public static PlayerColor playerColor;
 	
 	public enum PlayerColor {
 		
@@ -35,11 +35,27 @@ public class Player1 {
 	public void run() {
 		Scanner in = new Scanner(System.in);
 		
+		String color = in.nextLine();
+		
+		PlayerColor myColor;
+		if (color.equals("B")) {
+			myColor = PlayerColor.BLACK;
+		}
+		else if (color.equals("W")) {
+			myColor = PlayerColor.WHITE;
+		}
+		else {
+			throw new IllegalStateException("Unknown color: " + color);
+		}
+		
+		System.err.println("Color: " + color);
+		
 		while (true) {
 			int opponentX = in.nextInt();
 			int opponentY = in.nextInt();
 			
-			System.err.println(opponentX + " " + opponentY);
+			int myScore = in.nextInt();
+			int opponentScore = in.nextInt();
 			
 			boardSize = in.nextInt();
 			in.nextLine();
@@ -52,9 +68,9 @@ public class Player1 {
 			
 			PlayerColor[][] board = getBoard(lines);
 			
-			List<Pos> possible = getPossibleActions(board, null, 0.1);
+			List<Pos> possible = getPossibleActions(board, myColor, 0.1);
 			if (possible.isEmpty()) {
-				possible.add(new Pos(5, 1));
+				possible.add(new Pos((int) (Math.random() * 9), (int) (Math.random() * 9)));
 			}
 			Pos chosen = possible.get((int) (Math.random() * possible.size()));
 			
@@ -62,7 +78,7 @@ public class Player1 {
 		}
 	}
 	
-	public PlayerColor[][] getBoard(String[] lines) {
+	public static PlayerColor[][] getBoard(String[] lines) {
 		int size = lines.length;
 		PlayerColor[][] board = new PlayerColor[size][size];
 		for (int i = 0; i < size; i++) {
@@ -78,7 +94,7 @@ public class Player1 {
 		return board;
 	}
 	
-	protected List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor, double addRandom) {
+	public static List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor, double addRandom) {
 		List<Pos> blackStones = new ArrayList<>();
 		List<Pos> whiteStones = new ArrayList<>();
 		for (int i = 0; i < board.length; i++) {
@@ -117,7 +133,7 @@ public class Player1 {
 		return possibilities;
 	}
 	
-	protected List<Pos> getNear(Pos action) {
+	public static List<Pos> getNear(Pos action) {
 		List<Pos> fields = new ArrayList<Pos>();
 		int[][] nearFields = new int[][] {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 		for (int[] near : nearFields) {

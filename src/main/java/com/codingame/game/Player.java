@@ -7,13 +7,19 @@ public class Player extends AbstractMultiplayerPlayer {
 	
 	public Group hud;
 	
+	public static final String PASS_MOVE = "PASS";
+	
 	@Override
 	public int getExpectedOutputLines() {
 		return 1;
 	}
 	
-	public Action getAction() throws TimeoutException, NumberFormatException {
-		String[] output = getOutputs().get(0).split(" ");
-		return new Action(this, Integer.parseInt(output[0]), Integer.parseInt(output[1]));
+	public Action getMove() throws TimeoutException, NumberFormatException {
+		String output = getOutputs().get(0);
+		if (output.equals("PASS")) {
+			return Action.pass(this);
+		}
+		String[] split = output.split(" ");
+		return new Action(this, Integer.parseInt(split[0]), Integer.parseInt(split[1]));
 	}
 }

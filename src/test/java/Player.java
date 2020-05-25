@@ -3,63 +3,103 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-public class Player {
+class Player {
 	
-	protected int boardSize;
+	public int boardSize;
 	
-	protected PlayerColor playerColor;
+	public PlayerColor myColor;
+	public PlayerColor[][] board;
+	
+	protected static class Pos {
+		
+		int y, x;
+		
+		public Pos(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
 	
 	public enum PlayerColor {
 		
 		BLACK, WHITE;
-	}
-	
-	protected static class Pos {
 		
-		int row, col;
-		
-		public Pos(int row, int col) {
-			this.row = row;
-			this.col = col;
+		public static PlayerColor getOpposizeColor(PlayerColor lastMove) {
+			switch (lastMove) {
+				case BLACK:
+					return WHITE;
+				case WHITE:
+					return BLACK;
+				default:
+					return null;
+			}
 		}
 	}
 	
+	public static void main(String[] args) {
+		new Player();
+	}
+	
 	public Player() {
-		
+		run();
 	}
 	
 	public void run() {
 		Scanner in = new Scanner(System.in);
 		
-		System.err.println("Reading");
-		System.out.println("Reading");
+		String color = in.nextLine();
+		
+		if (color.equals("B")) {
+			myColor = PlayerColor.BLACK;
+		}
+		else if (color.equals("W")) {
+			myColor = PlayerColor.WHITE;
+		}
+		else {
+			throw new IllegalStateException("Unknown color: " + color);
+		}
+		
+		System.err.println("Color: " + myColor);
 		
 		while (true) {
-			int opponentRow = in.nextInt();
-			int opponentCol = in.nextInt();
-			if (opponentRow == -1) {
-				opponentRow = 10;
-				opponentCol = 10;
-			}
+			int opponentX = in.nextInt();
+			int opponentY = in.nextInt();
 			
-			System.err.println(opponentRow + " " + opponentCol);
+			int myScore = in.nextInt();
+			int opponentScore = in.nextInt();
 			
 			boardSize = in.nextInt();
-			System.err.println(boardSize);
+			//System.err.println("board size set: " + boardSize);
+			in.nextLine();
+			
 			String[] lines = new String[boardSize];
 			for (int i = 0; i < boardSize; i++) {
 				String line = in.nextLine();
-				System.err.println(line);
 				lines[i] = line;
 			}
 			
-			PlayerColor[][] board = getBoard(lines);
+			board = getBoard(lines);
 			
-			List<Pos> possible = getPossibleActions(board, PlayerColor.BLACK);
+			List<Pos> possible = getPossibleActions(board, myColor, 0.1);
+			if (possible.isEmpty()) {
+				if (countStonesOnBoard(myColor) > 0) {
+					System.out.println("PASS");
+					return;
+				}
+				possible.add(new Pos((int) (Math.random() * 9), (int) (Math.random() * 9)));
+			}
 			Pos chosen = possible.get((int) (Math.random() * possible.size()));
 			
-			System.out.println(String.format("%d %d", chosen.row, chosen.col));
+			System.out.println(String.format("%d %d", chosen.x, chosen.y));
 		}
+	}
+	
+	public PlayerColor[][] getBoard() {
+		return board;
+	}
+	
+	public int getBoardSize() {
+		return boardSize;
 	}
 	
 	public PlayerColor[][] getBoard(String[] lines) {
@@ -78,42 +118,77 @@ public class Player {
 		return board;
 	}
 	
-	protected List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor) {
+	public List<Pos> getPossibleActions(PlayerColor[][] board, PlayerColor myColor, double addRandom) {
 		List<Pos> blackStones = new ArrayList<>();
 		List<Pos> whiteStones = new ArrayList<>();
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
 				if (board[i][j] == PlayerColor.BLACK) {
-					blackStones.add(new Pos(i, j));
+					blackStones.add(new Pos(j, i));
 				}
 				if (board[i][j] == PlayerColor.WHITE) {
-					whiteStones.add(new Pos(i, j));
+					whiteStones.add(new Pos(j, i));
 				}
 			}
 		}
 		
-		List<Pos> opponentStones = null;
-		if (myColor == PlayerColor.BLACK) {
-			opponentStones = whiteStones;
-		}
-		if (myColor == PlayerColor.WHITE) {
-			opponentStones = blackStones;
+		List<Pos> stones = null;
+		stones = whiteStones;
+		stones.addAll(blackStones);
+		
+		List<Pos> possibilities = stones.stream().flatMap(pos -> getNear(pos).stream()).filter(pos -> board[pos.y][pos.x] == null)
+				.filter(pos -> !mightBeSuicidal(pos)).collect(Collectors.toList());
+		int random = (int) (possibilities.size() * addRandom);
+		for (int i = 0; i < random; i++) {
+			Pos pos = new Pos((int) (Math.random() * boardSize), (int) (Math.random() * boardSize));
+			if (board[pos.y][pos.x] == null) {
+				possibilities.add(pos);
+			}
 		}
 		
-		return opponentStones.stream().flatMap(pos -> getNear(pos).stream()).filter(pos -> board[pos.row][pos.col] == null)
-				.collect(Collectors.toList());
+		return possibilities;
 	}
 	
-	protected List<Pos> getNear(Pos action) {
+	private boolean mightBeSuicidal(Pos pos) {
+		List<Pos> near = getNear(pos);
+		int stonesNear = (int) near.stream().filter(p -> board[p.y][p.x] != null).count();
+		if (stonesNear >= 4) {
+			return true;
+		}
+		else {
+			int edge = 0;
+			if (pos.x == 0 || pos.x == boardSize - 1) {
+				edge++;
+			}
+			if (pos.y == 0 || pos.y == boardSize - 1) {
+				edge++;
+			}
+			return stonesNear + edge >= 4;
+		}
+	}
+	
+	public List<Pos> getNear(Pos action) {
 		List<Pos> fields = new ArrayList<Pos>();
 		int[][] nearFields = new int[][] {{-1, 0}, {0, -1}, {1, 0}, {0, 1}};
 		for (int[] near : nearFields) {
-			Pos pos = new Pos(action.row + near[0], action.col + near[1]);
-			if (pos.row >= 0 && pos.row < boardSize && pos.col >= 0 && pos.col < boardSize) {
+			Pos pos = new Pos(action.x + near[0], action.y + near[1]);
+			if (pos.y >= 0 && pos.y < boardSize && pos.x >= 0 && pos.x < boardSize) {
 				fields.add(pos);
 			}
 		}
 		
 		return fields;
+	}
+	
+	private int countStonesOnBoard(PlayerColor color) {
+		int stones = 0;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if (board[i][j] == color) {
+					stones++;
+				}
+			}
+		}
+		return stones;
 	}
 }

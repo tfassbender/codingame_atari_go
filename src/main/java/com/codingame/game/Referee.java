@@ -49,6 +49,8 @@ public class Referee extends AbstractReferee {
 	
 	private String moveError;
 	
+	private int maxTurns;
+	
 	public Referee() {
 		this(new Game());
 	}
@@ -67,6 +69,7 @@ public class Referee extends AbstractReferee {
 		drawHud();
 		
 		League league = League.getLeague(gameManager);
+		maxTurns = league.getMaxTurns();
 		gameManager.setFrameDuration(FRAME_DURATION);
 		gameManager.setMaxTurns(league.getMaxTurns());
 		
@@ -76,6 +79,9 @@ public class Referee extends AbstractReferee {
 		board = new PlayerColor[league.getBoardSize()][league.getBoardSize()];
 		
 		game.setBoardSize(league.getBoardSize());
+		
+		gameManager.getPlayer(0).sendInputLine("B");
+		gameManager.getPlayer(1).sendInputLine("W");
 	}
 	
 	private void drawBackground() {
@@ -154,7 +160,7 @@ public class Referee extends AbstractReferee {
 				.setY(y + stoneY).setFontSize(stonesFontSize).setFillColor(textColor).setAnchor(0.5);
 	}
 	
-	private void sendInputs(Player player) {
+	private void sendInputs(Player player, Player opponent) {
 		// last action
 		if (lastAction != null) {
 			player.sendInputLine(lastAction.toString());
@@ -162,6 +168,9 @@ public class Referee extends AbstractReferee {
 		else {
 			player.sendInputLine("-1 -1");
 		}
+		
+		// current points
+		player.sendInputLine(Integer.toString(player.getScore()) + " " + Integer.toString(opponent.getScore()));
 		
 		// current board
 		int boardSize = League.getLeague(gameManager).getBoardSize();
@@ -175,13 +184,20 @@ public class Referee extends AbstractReferee {
 	@Override
 	public void gameTurn(int turn) {
 		Player player = gameManager.getPlayer((turn - 1) % gameManager.getPlayerCount());
-		sendInputs(player);
+		Player opponent = gameManager.getPlayer(turn % gameManager.getPlayerCount());
+		sendInputs(player, opponent);
 		player.execute();
 		
 		// Read inputs
 		try {
-			final Action action = player.getAction();
-			final Move move = new Move(action.col, action.row, getPlayerColor(action.player));
+			final Action action = player.getMove();
+			final Move move;
+			if (action.pass) {
+				move = Move.getPassMove(getPlayerColor(action.player));
+			}
+			else {
+				move = new Move(action.col, action.row, getPlayerColor(action.player));
+			}
 			gameManager.addToGameSummary(String.format("Player %s played (%d %d)", action.player.getNicknameToken(), action.row, action.col));
 			
 			moveError = null;
@@ -192,8 +208,22 @@ public class Referee extends AbstractReferee {
 			
 			addMove(move);
 			
-			gameManager.getPlayer(0).setScore(game.getWhiteStonesCaptured());
-			gameManager.getPlayer(1).setScore(game.getBlackStonesCaptured());
+			Player player1 = gameManager.getPlayer(0);
+			Player player2 = gameManager.getPlayer(1);
+			player1.setScore(game.getWhiteStonesCaptured());
+			player2.setScore(game.getBlackStonesCaptured());
+			
+			if (turn == maxTurns && player1.getScore() == 0 && player2.getScore() == 0) {
+				// no player has captured any stones -> player with more groups wins
+				int stonesPlayer1 = countStonesOnBoard(getPlayerColor(player1));
+				int stonesPlayer2 = countStonesOnBoard(getPlayerColor(player2));
+				if (stonesPlayer1 > stonesPlayer2) {
+					player1.setScore(player1.getScore() + 1);
+				}
+				else if (stonesPlayer1 < stonesPlayer2) {
+					player2.setScore(player2.getScore() + 1);
+				}
+			}
 			
 			drawPoints();
 			drawBoard();
@@ -316,6 +346,10 @@ public class Referee extends AbstractReferee {
 	 * </ul>
 	 */
 	public boolean isValidMove(Move move) {
+		if (move.isPass()) {
+			//passing is always a valid move
+			return true;
+		}
 		if (!move.getPos().exists(getBoardSize())) {
 			//position doesn't exist
 			moveError = "Position doesn't exist: " + move.getCol() + " " + move.getCol();
@@ -373,13 +407,15 @@ public class Referee extends AbstractReferee {
 	 * Execute a move without checking whether it's valid. The new stone is added and beaten ones are removed
 	 */
 	public void addMove(Move move) {
-		//copy the board to the previous board field
-		previousBoard = getBoardCopy();
-		
-		//set the new stone
-		board[move.getRow()][move.getCol()] = move.getColor();
-		//remove beaten stones (if any)
-		removeBeaten(move, true);
+		if (!move.isPass()) {
+			//copy the board to the previous board field
+			previousBoard = getBoardCopy();
+			
+			//set the new stone
+			board[move.getRow()][move.getCol()] = move.getColor();
+			//remove beaten stones (if any)
+			removeBeaten(move, true);
+		}
 	}
 	
 	/**
@@ -426,6 +462,18 @@ public class Referee extends AbstractReferee {
 				game.setWhiteStonesCaptured(game.getWhiteStonesCaptured() + stonesBeaten);
 			}
 		}
+	}
+	
+	private int countStonesOnBoard(PlayerColor color) {
+		int stones = 0;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if (board[i][j] == color) {
+					stones++;
+				}
+			}
+		}
+		return stones;
 	}
 	
 	public PlayerColor getLastMoveColor() {

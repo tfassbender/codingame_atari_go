@@ -1,15 +1,31 @@
 package com.codingame.game.go;
 
+/**
+ * @author Tobias
+ *
+ */
 public class Move {
 	
 	private int row;
 	private int col;
+	private Type type;
 	private PlayerColor color;
+	
+	public enum Type {
+		STONE, PASS;
+	}
 	
 	public Move(int row, int col, PlayerColor color) {
 		this.row = row;
 		this.col = col;
 		this.color = color;
+		this.type = Type.STONE;
+	}
+	
+	public static Move getPassMove(PlayerColor color) {
+		Move pass = new Move(-1, -1, color);
+		pass.setType(Type.PASS);
+		return pass;
 	}
 	
 	public FieldPosition getPos() {
@@ -63,5 +79,17 @@ public class Move {
 	}
 	public void setColor(PlayerColor color) {
 		this.color = color;
+	}
+	
+	public Type getType() {
+		return type;
+	}
+	
+	public void setType(Type type) {
+		this.type = type;
+	}
+	
+	public boolean isPass() {
+		return type == Type.PASS;
 	}
 }
