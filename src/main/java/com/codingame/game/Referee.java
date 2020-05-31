@@ -38,7 +38,7 @@ public class Referee extends AbstractReferee {
 	@Inject
 	private EndScreenModule endScreenModule;
 	
-	private Action lastAction = null;
+	private Action lastAction = Action.pass(null);
 	
 	private Game game;
 	
@@ -376,7 +376,7 @@ public class Referee extends AbstractReferee {
 			return false;
 		}
 		
-		if (boardsEqual(board, previousBoard)) {
+		if (!lastAction.pass && boardsEqual(board, previousBoard)) {
 			//restores the board from the last move (ko rule violated)
 			moveError = "Ko-Rule violation";
 			board = tmpBoard;
