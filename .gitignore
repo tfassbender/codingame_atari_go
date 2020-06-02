@@ -6,3 +6,4 @@ target/
 .vscode
 bin
 config/Boss.java
+config/*/Boss.java

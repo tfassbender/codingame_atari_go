@@ -1,0 +1,122 @@
+<div style="color:#cccccc;padding:20px;margin-right:15px;margin-left:15px;margin-bottom:10px;text-align:left">This is a slight modification of the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>
+<br>Click <a href="https://senseis.xmp.net/?BasicRulesOfGo">here</a> for an introduction into the rules of Go.
+<br>Click <a href="https://github.com/tfassbender/codingame_atari_go">here</a> for the Referee code<br>
+</div>
+<div class="statement-body">
+<!-- GOAL --> 
+    <div class="statement-section statement-goal"> 
+      <h2> 
+        <span class="icon icon-goal">&nbsp;</span> 
+        <span>The Goal</span> 
+      </h2> 
+      <div class="statement-goal-content"> 
+        The game is now played on a 19x19 board and lasts 200 turns.
+      </div> 
+    </div> 
+    <!-- RULES -->
+    <div class="statement-section statement-rules">
+        <h1>
+            <span class="icon icon-rules">&nbsp;</span>
+            <span>Rules</span>
+        </h1>
+        <div class="statement-rules-content">
+            Atari Go is a modification of the classical board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>, that is often used to teach new players the rules of Go.<br />
+            The rules are basically the same as the Go rules with some modifications to make the game a bit easier:
+            <ul>
+            	<li>You don't gain points by occupying fields</li>
+            	<li>The only way to gain points is to capture the stones of your opponent</li>
+            	<li>The game does not end after both players have passed (the game ends after <const>200</const> turns)</li>
+            	<li>All other rules stay the same as in the game of Go</li>
+            </ul>
+            
+            TODO add basic go rules here
+        </div>
+    </div>
+
+    <!-- EXAMPLES -->
+    <div class="statement-section statement-examples">
+        <h1>
+            <span class="icon icon-example">&nbsp;</span>
+            <span>Examples</span>
+        </h1>
+
+        <div class="statement-examples-text">
+            <div class="first-example"><h3>TODO add some examples</h3></div><br>
+        </div>
+    </div><br>
+
+    <!-- Victory conditions -->
+    <div class="statement-victory-conditions">
+        <div class="icon victory"></div>
+        <div class="blk">
+            <div class="title">Victory Conditions</div>
+            <div class="text">
+                <ul style="padding-bottom: 0;">
+                    <li>Capture more stones than your opponent</li>
+                    <li>If no player has captured any stones after the maximum number of turns is reached, the player that has played more stones wins (to prevent a draw if a player passes in every move)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lose conditions -->
+    <div class="statement-lose-conditions">
+        <div class="icon lose"></div>
+        <div class="blk">
+            <div class="title">Loss Conditions</div>
+            <div class="text">
+                <ul style="padding-bottom: 0;">
+                    <li>You send an illegal move</li>
+                    <li>You don't respond in time or output an unrecognized command</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROTOCOL -->
+    <div class="statement-section statement-protocol">
+        <h1>
+        <span class="icon icon-protocol">&nbsp;</span>
+        <span>Game Input</span>
+    </h1>
+
+    <!-- Protocol block -->
+    <div class="blk">
+        <div class="title">Initial input</div>
+        <div class="text">
+            <span class="statement-lineno">One line</span>: <var>myColor</var>: <action>B</action> if you are playing the black stones or <action>W</action> if you're playing the white stones.
+            <br>
+        </div>
+        <div class="title">Input for one game turn</div>
+        <div class="text">
+            <span class="statement-lineno">First line</span>: <var>x</var> <var>y</var>: two integers representing the position of the last stone, that your opponent played ("-1 -1" in the first turn)
+            <br>
+            <span class="statement-lineno">Next line</span>: <var>myScore</var> <var>opponentScore</var>: two integers representing your current score and your opponent's current score (the number of captured stones)
+            <br>
+            <span class="statement-lineno">Next line</span>: <var>boardSize</var>: an integer representing the size of the board
+            <br>
+            <span class="statement-lineno">Next <var>boardSize</var> lines</span>: <var>line</var>: one line of the current board, where <action>B</action> marks a black stone, <action>W</action> marks a white stone and <action>.</action> marks an empty field
+            <br>
+        </div>
+    </div>
+
+    <!-- Protocol block -->
+    <div class="blk">
+        <div class="title">Output</div>
+        <div class="text">
+            <span class="statement-lineno">A single line containing</span>: either the <var>x</var> and <var>y</var> coordinates of the next stone you want to play or <var>PASS</var> if you don't want to play a stone<br>
+        <br>
+        </div>
+    </div>
+
+    <!-- Protocol block -->
+    <div class="blk">
+        <div class="title">Constraints</div>
+        Response time first turn is ≤
+        <const>1000</const> ms.
+        <br>Response time per turn is ≤
+        <const>100</const> ms.
+        <br><br>The game ends after <const>200</const> turns (200 stones for each player)
+        </div>
+    </div>
+</div>
