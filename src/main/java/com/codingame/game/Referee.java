@@ -33,8 +33,6 @@ public class Referee extends AbstractReferee {
 	private MultiplayerGameManager<Player> gameManager;
 	@Inject
 	private GraphicEntityModule graphicEntityModule;
-	//@Inject
-	//private TooltipModule tooltips;
 	@Inject
 	private EndScreenModule endScreenModule;
 	
@@ -82,6 +80,8 @@ public class Referee extends AbstractReferee {
 		
 		gameManager.getPlayer(0).sendInputLine("B");
 		gameManager.getPlayer(1).sendInputLine("W");
+		
+		gameManager.registerModule(endScreenModule);
 	}
 	
 	private void drawBackground() {
@@ -251,8 +251,6 @@ public class Referee extends AbstractReferee {
 	}
 	
 	private void endGame() {
-		gameManager.endGame();
-		
 		Player winner = null;
 		Player looser = null;
 		
@@ -273,7 +271,17 @@ public class Referee extends AbstractReferee {
 			gameManager.addToGameSummary(GameManager.formatSuccessMessage(winner.getNicknameToken() + " won!"));
 		}
 		
-		endScreenModule.setScores(new int[] {p0.getScore(), p1.getScore()});
+		gameManager.endGame();
+	}
+	
+	@Override
+	public void onEnd() {
+		Player p0 = gameManager.getPlayers().get(0);
+		Player p1 = gameManager.getPlayers().get(1);
+		int[] scores = new int[] {p0.getScore(), p1.getScore()};
+		String[] texts = new String[] {p0.getScore() + " stones captured", p1.getScore() + " stones captured"};
+		endScreenModule.setScores(scores, texts);
+		endScreenModule.setTitleRankingsSprite("logo.png");
 	}
 	
 	public PlayerColor getPlayerColor(Player player) {
