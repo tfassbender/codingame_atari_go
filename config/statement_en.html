@@ -19,7 +19,22 @@
             	<li>All other rules stay the same as in the game of Go</li>
             </ul>
             
-            TODO add basic go rules here
+            <h3>Go Rules</h3>
+            A game of Go is usually played on a board of 19x19 fields. In the first leagues a board of 9x9 or 13x13 fields is used, but in the later leagues a 19x19 board is used.
+            <br>
+            While playing, both players place one of their stones (per turn) on a free position on the field. The stones are not moved after they are placed. You can only add new stones.
+            <br>
+            The goal of the game is to capture the stones of your opponent. This can be done by surrounding the stones (or groups) of your opponent with your stones. If a stone or group has no free fields beneath it, it is captured and removed from the board (see example 2).
+            <br>
+            If a stone is surrounded by other stones of the same color this stone is not captured, but all stones that are directly touching each other form a group. This group shares it's free fields. So a group of stones is often stronger and more difficult to capture than a single stone (see example 1).
+            <br>
+            <br>
+            Beside these simple rules there are a view more rules, on where stones can be placed and where not.
+            <ul>
+            	<li>You can only place a stone on a field where no stone is placed yet</li>
+            	<li>You can not play a stone that would directly be removed (no suicidal moves). An exception to this rule is that the opponent stones are removed before this rule is applied. So if your stone seems to be directly surrounded by other stones, but it captures and removes at least one of the surrounding stones it can be played (see example 3)</li>
+            	<li>You can not play a stone that would lead to the same board, like in the last turn when you played a stone. This is called the Ko-Rule (see example 4)</li>
+            </ul>
         </div>
     </div>
 
@@ -31,7 +46,44 @@
         </h1>
 
         <div class="statement-examples-text">
-            <div class="first-example"><h3>TODO add some examples</h3></div><br>
+            <div class="first-example">
+            	<h3>Example 1 - Groups</h3>
+            	In the image below the three white stones form a group. Therefore the two upper stones (that are completely surrounded) are not captured as long as one stone of the group is not completely captured.
+            	<p><img src="https://senseis.xmp.net/diagrams/41/49d804c30e36bd3cf3666a6d76f39644.png" style="height: 300px; width: auto;"></img></p>
+            </div>
+            
+            <div class="second-example">
+            	<h3>Example 2 - Capturing stones</h3>
+            	In the image below the white stone is almost captured. The last free field it has is marked with a red square. The other fields (marked with red crosses) are not directly adjacent to the white stone and are therefore no free fields for the white stone.
+            	<p><img src="https://senseis.xmp.net/diagrams/0/7cac8afadce46df1d520ee56b4eece8b.png" style="height: 300px; width: auto;"></img></p>
+            	Now if the back stone is placed like in the image below...
+            	<p><img src="https://senseis.xmp.net/diagrams/48/ceb2245b3fbf4c62872f4bdf2796ac95.png" style="height: 300px; width: auto;"></img></p>
+            	...the white stone has no free fields around it and therefore it is captured. So it will be removed and after the turn of the black stone the field will look like in the image below.
+            	<p><img src="https://senseis.xmp.net/diagrams/13/6e7dc384eb2e8b494e097f38d4259bcb.png" style="height: 300px; width: auto;"></img></p>
+            </div>
+            
+            <div class="third-example">
+            	<h3>Example 3 - Suicidal moves</h3>
+            	In the image below, a white stone that is placed in the middle of the four black stones would have no free fields beneath it and would be directly removed. Therefore a white stone can't be placed in the middle of the black stones in this case.
+            	<p><img src="https://senseis.xmp.net/diagrams/13/6e7dc384eb2e8b494e097f38d4259bcb.png" style="height: 300px; width: auto;"></img></p>
+            	An exception to this rule is shown in the following image: In this image it seems to be the same case. A white stone that is placed in the middle of the black stones would have no free fields adjacent to it and would be removed. But in this case the white stone can be placed in the middle of the black stones as shown in the next image.
+            	<p><img src="https://senseis.xmp.net/diagrams/37/0708d56ffed33ef1058f0185803a7f46.png" style="height: 300px; width: auto;"></img></p>
+            	Before the free fields of the white stone are counted, first the black stones are to be removed. This leads to the following field after the white stone is placed:
+            	<p><img src="https://senseis.xmp.net/diagrams/47/00bb7694a7980ec3018ee6a2e721f212.png" style="height: 300px; width: auto;"></img></p>
+            	Since the white stone now has a free field adjacent to it (where the black stone was removed) it can be played.
+            </div>
+            
+            <div class="fourth-example">
+            	<h3>Example 4 - Ko-Rule</h3>
+            	In the third example it was shown that in a field, like the one in the image below, a white stone can be placed in the middle of the four black stones...
+            	<p><img src="https://senseis.xmp.net/diagrams/13/6e7dc384eb2e8b494e097f38d4259bcb.png" style="height: 300px; width: auto;"></img></p>
+            	... which would lead to a board that looks like this:
+            	<p><img src="https://senseis.xmp.net/diagrams/37/0708d56ffed33ef1058f0185803a7f46.png" style="height: 300px; width: auto;"></img></p>
+            	Now it seems that a black stone could do a similar move by placing it in the middle of the four white stones like this:
+            	<p><img src="https://senseis.xmp.net/diagrams/28/8da1b11165650ffa0964df5ff2debbe1.png" style="height: 300px; width: auto;"></img></p>
+            	This would normally be a valid move (just like in the third example), but to prevent the game to get stuck on this (both players just capturing the same stones again and again), the above move is not possible for the black stone, because it would lead to the same board like one turn before (the first image of this example).<br>
+            	But it would be possible to place a black stone on any other field, let white place a stone too, and then come back to this formation of stones and place the black stone in between the white stones (like in the image above) because now it would no longer lead to the same board like in the first image of this example (there are now two more stones placed somewhere on the board).
+            </div>
         </div>
     </div><br>
 
@@ -94,7 +146,7 @@
     <div class="blk">
         <div class="title">Output</div>
         <div class="text">
-            <span class="statement-lineno">A single line containing</span>: either the <var>x</var> and <var>y</var> coordinates of the next stone you want to play or <var>PASS</var> if you don't want to play a stone<br>
+            <span class="statement-lineno">A single line containing</span>: either the <var>x</var> and <var>y</var> coordinates of the next stone you want to play or <var>PASS</var> if you don't want to play a stone (<var>PASS</var> is always a valid move)<br>
         <br>
         </div>
     </div>

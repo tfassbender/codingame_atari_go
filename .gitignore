@@ -7,3 +7,4 @@ target/
 bin
 config/Boss.java
 config/*/Boss.java
+src/test/java/Boss*.java

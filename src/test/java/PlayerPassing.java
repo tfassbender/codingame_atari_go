@@ -33,6 +33,7 @@ public class PlayerPassing {
 		Scanner in = new Scanner(System.in);
 		
 		String color = in.nextLine();
+		boardSize = in.nextInt();
 		
 		while (true) {
 			int opponentX = in.nextInt();
@@ -41,7 +42,6 @@ public class PlayerPassing {
 			int myScore = in.nextInt();
 			int opponentScore = in.nextInt();
 			
-			boardSize = in.nextInt();
 			in.nextLine();
 			
 			String[] lines = new String[boardSize];

@@ -1,8 +1,8 @@
 read myColor:string(1)
+read boardSize:int
 gameloop
 read opponentX:int opponentY:int
 read myScore:int opponentScore:int
-read boardSize:int
 loop boardSize read line:string(boardSize)
 write PASS
 

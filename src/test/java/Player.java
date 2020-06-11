@@ -48,6 +48,7 @@ class Player {
 		Scanner in = new Scanner(System.in);
 		
 		String color = in.nextLine();
+		boardSize = in.nextInt();
 		
 		if (color.equals("B")) {
 			myColor = PlayerColor.BLACK;
@@ -68,7 +69,6 @@ class Player {
 			int myScore = in.nextInt();
 			int opponentScore = in.nextInt();
 			
-			boardSize = in.nextInt();
 			//System.err.println("board size set: " + boardSize);
 			in.nextLine();
 			

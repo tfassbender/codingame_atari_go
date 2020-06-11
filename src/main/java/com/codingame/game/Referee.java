@@ -80,6 +80,8 @@ public class Referee extends AbstractReferee {
 		
 		gameManager.getPlayer(0).sendInputLine("B");
 		gameManager.getPlayer(1).sendInputLine("W");
+		gameManager.getPlayer(0).sendInputLine(Integer.toString(league.getBoardSize()));
+		gameManager.getPlayer(1).sendInputLine(Integer.toString(league.getBoardSize()));
 		
 		gameManager.registerModule(endScreenModule);
 	}
@@ -174,7 +176,6 @@ public class Referee extends AbstractReferee {
 		
 		// current board
 		int boardSize = League.getLeague(gameManager).getBoardSize();
-		player.sendInputLine(Integer.toString(boardSize));
 		for (int i = 0; i < boardSize; i++) {
 			String line = Arrays.stream(board[i]).map(PlayerColor::toCharCode).collect(Collectors.joining());
 			player.sendInputLine(line);
