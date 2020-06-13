@@ -8,7 +8,8 @@ public enum League {
 	
 	LEAGUE_1(1, 80, 9), //
 	LEAGUE_2(2, 200, 9), //
-	LEAGUE_3(3, 200, 19);
+	LEAGUE_3(3, 200, 13), //
+	LEAGUE_4(4, 200, 19);
 	
 	private final int level;
 	private final int maxTurns;
