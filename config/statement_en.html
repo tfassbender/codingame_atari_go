@@ -50,6 +50,8 @@
             	<h3>Example 1 - Groups</h3>
             	In the image below the three white stones form a group. Therefore the two upper stones (that are completely surrounded) are not captured as long as one stone of the group is not completely captured.
             	<p><img src="https://senseis.xmp.net/diagrams/41/49d804c30e36bd3cf3666a6d76f39644.png" style="height: 150px; width: auto;"></img></p>
+            	<br>
+            	<br>
             </div>
             
             <div class="second-example">
@@ -60,6 +62,8 @@
             	<p><img src="https://senseis.xmp.net/diagrams/48/ceb2245b3fbf4c62872f4bdf2796ac95.png" style="height: 150px; width: auto;"></img></p>
             	...the white stone has no free fields around it and therefore it is captured. So it will be removed and after the turn of the black stone the field will look like in the image below.
             	<p><img src="https://senseis.xmp.net/diagrams/13/6e7dc384eb2e8b494e097f38d4259bcb.png" style="height: 150px; width: auto;"></img></p>
+            	<br>
+            	<br>
             </div>
             
             <div class="third-example">
@@ -71,18 +75,22 @@
             	Before the free fields of the white stone are counted, first the black stones are to be removed. This leads to the following field after the white stone is placed:
             	<p><img src="https://senseis.xmp.net/diagrams/47/00bb7694a7980ec3018ee6a2e721f212.png" style="height: 150px; width: auto;"></img></p>
             	Since the white stone now has a free field adjacent to it (where the black stone was removed) it can be played.
+            	<br>
+            	<br>
             </div>
             
             <div class="fourth-example">
             	<h3>Example 4 - Ko-Rule</h3>
             	In the third example it was shown that in a field, like the one in the image below, a white stone can be placed in the middle of the four black stones...
-            	<p><img src="https://senseis.xmp.net/diagrams/13/6e7dc384eb2e8b494e097f38d4259bcb.png" style="height: 150px; width: auto;"></img></p>
-            	... which would lead to a board that looks like this:
             	<p><img src="https://senseis.xmp.net/diagrams/37/0708d56ffed33ef1058f0185803a7f46.png" style="height: 150px; width: auto;"></img></p>
+            	... which would lead to a board that looks like this:
+            	<p><img src="https://senseis.xmp.net/diagrams/47/00bb7694a7980ec3018ee6a2e721f212.png" style="height: 150px; width: auto;"></img></p>
             	Now it seems that a black stone could do a similar move by placing it in the middle of the four white stones like this:
             	<p><img src="https://senseis.xmp.net/diagrams/28/8da1b11165650ffa0964df5ff2debbe1.png" style="height: 150px; width: auto;"></img></p>
             	This would normally be a valid move (just like in the third example), but to prevent the game to get stuck on this (both players just capturing the same stones again and again), the above move is not possible for the black stone, because it would lead to the same board like one turn before (the first image of this example).<br>
             	But it would be possible to place a black stone on any other field, let white place a stone too, and then come back to this formation of stones and place the black stone in between the white stones (like in the image above) because now it would no longer lead to the same board like in the first image of this example (there are now two more stones placed somewhere on the board).
+            	<br>
+            	<br>
             </div>
         </div>
     </div><br>
@@ -126,7 +134,10 @@
     <div class="blk">
         <div class="title">Initial input</div>
         <div class="text">
-            <span class="statement-lineno">One line</span>: <var>myColor</var>: <action>B</action> if you are playing the black stones or <action>W</action> if you're playing the white stones.
+            <span class="statement-lineno">First line</span>: <var>myColor</var>: <action>B</action> if you are playing the black stones or <action>W</action> if you're playing the white stones.
+            <br>
+            <span class="statement-lineno">Next line</span>: <var>boardSize</var>: an integer representing the size of the board
+            <br>
             <br>
         </div>
         <div class="title">Input for one game turn</div>
@@ -134,8 +145,6 @@
             <span class="statement-lineno">First line</span>: <var>x</var> <var>y</var>: two integers representing the position of the last stone, that your opponent played ("-1 -1" in the first turn)
             <br>
             <span class="statement-lineno">Next line</span>: <var>myScore</var> <var>opponentScore</var>: two integers representing your current score and your opponent's current score (the number of captured stones)
-            <br>
-            <span class="statement-lineno">Next line</span>: <var>boardSize</var>: an integer representing the size of the board
             <br>
             <span class="statement-lineno">Next <var>boardSize</var> lines</span>: <var>line</var>: one line of the current board, where <action>B</action> marks a black stone, <action>W</action> marks a white stone and <action>.</action> marks an empty field
             <br>
