@@ -9,7 +9,7 @@ public class Main {
 		gameRunner.addAgent(Player.class);
 		
 		// The first league is classic tic-tac-toe
-		gameRunner.setLeagueLevel(3);
+		gameRunner.setLeagueLevel(4);
 		// The second league is ultimate tic-tac-toe
 		//gameRunner.setLeagueLevel(2);
 		

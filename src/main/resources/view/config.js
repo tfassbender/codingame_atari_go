@@ -1,4 +1,7 @@
 import { GraphicEntityModule } from './entity-module/GraphicEntityModule.js';
+import { EndScreenModule } from './endscreen-module/EndScreenModule.js';
+
+export const gameName = 'Atari Go';
 
 export const demo = {
   playerCount: 2,

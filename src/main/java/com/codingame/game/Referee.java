@@ -1,5 +1,6 @@
 package com.codingame.game;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -49,6 +50,12 @@ public class Referee extends AbstractReferee {
 	
 	private int maxTurns;
 	
+	private List<Sprite> whiteStonesBuffer = new ArrayList<Sprite>(100);
+	private List<Sprite> blackStonesBuffer = new ArrayList<Sprite>(100);
+	
+	private Text textPointsWhite;
+	private Text textPointsBlack;
+	
 	public Referee() {
 		this(new Game());
 	}
@@ -64,6 +71,8 @@ public class Referee extends AbstractReferee {
 	@Override
 	public void init() {
 		drawBackground();
+		drawPointsInit();
+		drawBoardBackground();
 		drawHud();
 		
 		League league = League.getLeague(gameManager);
@@ -89,8 +98,6 @@ public class Referee extends AbstractReferee {
 	private void drawBackground() {
 		graphicEntityModule.createSprite().setImage("background.jpg").setAnchor(0).setBaseWidth(FRAME_WIDTH).setBaseHeight(FRAME_HEIGHT);
 		graphicEntityModule.createSprite().setImage("logoCG.png").setX(FRAME_WIDTH - 280).setY(960).setAnchor(0.5);
-		drawPoints();
-		drawBoardBackground();
 	}
 	
 	private void drawBoardBackground() {
@@ -114,30 +121,53 @@ public class Referee extends AbstractReferee {
 		}
 	}
 	
-	private void drawBoard() {
-		drawBoardBackground();
+	private void updateBoard() {
+		blackStonesBuffer.forEach(sprite -> sprite.setVisible(false));
+		whiteStonesBuffer.forEach(sprite -> sprite.setVisible(false));
+		
+		int blackStoneSpritesUsed = 0;
+		int whiteStoneSpritesUsed = 0;
 		
 		int boardSize = League.getLeague(gameManager).getBoardSize();
 		for (int row = 0; row < boardSize; row++) {
 			for (int col = 0; col < boardSize; col++) {
 				if (board[row][col] != null) {
-					Sprite stone = graphicEntityModule.createSprite();
+					Sprite stone;
 					if (board[row][col] == PlayerColor.BLACK) {
-						stone.setImage("go_stone_black.png");
+						if (blackStonesBuffer.size() > blackStoneSpritesUsed) {
+							stone = blackStonesBuffer.get(blackStoneSpritesUsed);
+						}
+						else {
+							stone = graphicEntityModule.createSprite().setImage("go_stone_black.png");
+							blackStonesBuffer.add(stone);
+						}
+						blackStoneSpritesUsed++;
 					}
 					else if (board[row][col] == PlayerColor.WHITE) {
-						stone.setImage("go_stone_white.png");
+						if (whiteStonesBuffer.size() > whiteStoneSpritesUsed) {
+							stone = whiteStonesBuffer.get(whiteStoneSpritesUsed);
+						}
+						else {
+							stone = graphicEntityModule.createSprite().setImage("go_stone_white.png");
+							whiteStonesBuffer.add(stone);
+						}
+						whiteStoneSpritesUsed++;
+					}
+					else {
+						throw new IllegalStateException("unknown player color on board: " + board[row][col]);
 					}
 					League league = League.getLeague(gameManager);
 					stone.setBaseWidth(league.getStoneImageSize()).setBaseHeight(league.getStoneImageSize());
 					stone.setX(league.getFirstStoneX() + (league.getStoneImageSize() + league.getStoneImageGap()) * col);
 					stone.setY(league.getFirstStoneY() + (league.getStoneImageSize() + league.getStoneImageGap()) * row);
+					
+					stone.setVisible(true);
+					graphicEntityModule.commitEntityState(0, stone);
 				}
 			}
 		}
 	}
-	
-	private void drawPoints() {
+	private void drawPointsInit() {
 		final int x = 250;
 		final int y = 500;
 		final int capturedFontSize = 60;
@@ -147,6 +177,7 @@ public class Referee extends AbstractReferee {
 		final int stoneY = 100;
 		final int stonesFontSize = 100;
 		final int textX = 75;
+		
 		graphicEntityModule.createSprite().setImage("background_points.png").setAnchor(0).setBaseWidth(FRAME_WIDTH).setBaseHeight(FRAME_HEIGHT);
 		graphicEntityModule.createText("Captured:").setFontFamily("arial").setX(x).setY(y).setZIndex(20).setFontSize(capturedFontSize)
 				.setFillColor(textColor).setAnchor(0.5);
@@ -156,10 +187,15 @@ public class Referee extends AbstractReferee {
 				.setBaseHeight(stoneSize).setAnchor(0.5);
 		graphicEntityModule.createSprite().setImage("go_stone_black.png").setX(FRAME_WIDTH - x - stoneX).setY(y + stoneY).setBaseWidth(stoneSize)
 				.setBaseHeight(stoneSize).setAnchor(0.5);
-		graphicEntityModule.createText(Integer.toString(game.getWhiteStonesCaptured())).setFontFamily("arial").setX(x + textX).setY(y + stoneY)
-				.setFontSize(stonesFontSize).setFillColor(textColor).setAnchor(0.5);
-		graphicEntityModule.createText(Integer.toString(game.getBlackStonesCaptured())).setFontFamily("arial").setX(FRAME_WIDTH - x - textX)
+		textPointsWhite = graphicEntityModule.createText(Integer.toString(game.getWhiteStonesCaptured())).setFontFamily("arial").setX(x + textX)
 				.setY(y + stoneY).setFontSize(stonesFontSize).setFillColor(textColor).setAnchor(0.5);
+		textPointsBlack = graphicEntityModule.createText(Integer.toString(game.getBlackStonesCaptured())).setFontFamily("arial")
+				.setX(FRAME_WIDTH - x - textX).setY(y + stoneY).setFontSize(stonesFontSize).setFillColor(textColor).setAnchor(0.5);
+	}
+
+	private void updatePoints() {
+		textPointsWhite.setText(Integer.toString(game.getWhiteStonesCaptured()));
+		textPointsBlack.setText(Integer.toString(game.getBlackStonesCaptured()));
 	}
 	
 	private void sendInputs(Player player, Player opponent) {
@@ -226,8 +262,8 @@ public class Referee extends AbstractReferee {
 				}
 			}
 			
-			drawPoints();
-			drawBoard();
+			updatePoints();
+			updateBoard();
 		}
 		catch (NumberFormatException e) {
 			player.deactivate("Wrong output!");
