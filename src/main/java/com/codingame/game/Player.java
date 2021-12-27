@@ -14,12 +14,15 @@ public class Player extends AbstractMultiplayerPlayer {
 		return 1;
 	}
 	
-	public Action getMove() throws TimeoutException, NumberFormatException {
+	public Action getMove() throws TimeoutException, NumberFormatException, InvalidAction {
 		String output = getOutputs().get(0);
 		if (output.equals("PASS")) {
 			return Action.pass(this);
 		}
 		String[] split = output.split(" ");
+		if (split.length < 2) {
+			throw new InvalidAction("Invalid output!");	
+		}
 		return new Action(this, Integer.parseInt(split[0]), Integer.parseInt(split[1]));
 	}
 }
